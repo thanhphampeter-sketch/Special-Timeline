@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Memories</title>
+
+  <!-- FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <style>
+    /* ================= BASE ================= */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #ffdae8, #f7b7d2, #f2a1c6);
+      overflow: hidden;
+      font-family: 'Playfair Display', serif;
+      color: #5a0f2e;
+    }
+
+    audio { display: none; }
+
+    /* ================= HEART INTRO ================= */
+    #intro {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      background: inherit;
+    }
+
+    .big-heart {
+      font-size: 160px;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .fly-away {
+      animation: balloon 4s ease-in forwards;
+    }
+
+    @keyframes balloon {
+      0% { transform: translate(0,0) scale(1); opacity: 1; }
+      60% { transform: translate(20px,-120px) scale(1.05); }
+      100% { transform: translate(60px,-300px) scale(0.9); opacity: 0; }
+    }
+
+    /* ================= CURTAIN ================= */
+    #curtain {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(90deg, #b1124d 0%, #d81b60 50%, #b1124d 100%);
+      z-index: 9;
+      transform: scaleX(1);
+      transform-origin: center;
+      transition: transform 2s ease;
+    }
+
+    #curtain.open { transform: scaleX(0); }
+
+    /* ================= MAIN CONTENT ================= */
+    #main {
+      opacity: 0;
+      transition: opacity 2s ease;
+      padding-top: 140px;
+    }
+
+    #main.show { opacity: 1; }
+
+    h1 {
+      text-align: center;
+      font-family: 'Great Vibes', cursive;
+      font-size: 64px;
+      margin-bottom: 40px;
+      color: #7a1134;
+    }
+
+    /* ================= LAMPS ================= */
+    .lamps {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 40px;
+      pointer-events: none;
+    }
+
+    .lamp-row {
+      display: flex;
+      gap: 14px;
+    }
+
+    .lamp {
+      width: 14px;
+      height: 18px;
+      background: #ffd27d;
+      border-radius: 50% 50% 40% 40%;
+      box-shadow: 0 0 12px rgba(255,210,125,.9);
+      animation: swing 4s ease-in-out infinite alternate;
+      position: relative;
+    }
+
+    .lamp::before {
+      content: "";
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      width: 1px;
+      height: 14px;
+      background: #666;
+    }
+
+    @keyframes swing {
+      from { transform: rotate(-4deg); }
+      to { transform: rotate(4deg); }
+    }
+
+    /* ================= FLOATING HEARTS ================= */
+    .floating-heart {
+      position: absolute;
+      font-size: 24px;
+      opacity: .6;
+      animation: float 10s linear infinite;
+    }
+
+    @keyframes float {
+      from { transform: translateY(100vh); }
+      to { transform: translateY(-120px); }
+    }
+
+    /* ================= TIMELINE ================= */
+    .timeline-wrapper {
+      overflow-x: auto;
+      padding: 40px 60px;
+    }
+
+    .timeline {
+      position: relative;
+      display: flex;
+      gap: 120px;
+      min-width: 1200px;
+      align-items: center;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(122,17,52,.4);
+    }
+
+    .event {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      background: #ffb3d5;
+      border-radius: 50%;
+      z-index: 2;
+      cursor: pointer;
+      transition: transform .3s;
+      box-shadow: 0 0 10px rgba(255,105,180,.6);
+    }
+
+    .event:hover { transform: scale(1.4); }
+
+    .event span {
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    /* ================= ENVELOPE MODAL ================= */
+    #modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .envelope {
+      width: 200px;
+      height: 130px;
+      background: #ffd1e3;
+      position: relative;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(255,182,193,.8);
+      text-align: center;
+      padding-top: 40px;
+      animation: fadeIn .5s ease;
+    }
+
+    .lock {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    input {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: none;
+      background: #ff77aa;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+<audio id="bgm" src="audio/bgm.mp3" loop></audio>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="big-heart" id="heart">❤️</div>
+</div>
+
+<div id="curtain"></div>
+
+<!-- LAMPS -->
+<div class="lamps">
+  <div class="lamp-row">
+    <div class="lamp"></div><div class="lamp"></div><div class="lamp"></div><div class="lamp"></div>
+  </div>
+  <div class="lamp-row">
+    <div class="lamp"></div><div class="lamp"></div><div class="lamp"></div><div class="lamp"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <h1>Dòng thời gian của chúng ta</h1>
+
+  <div class="timeline-wrapper">
+    <div class="timeline">
+
+      <div class="event" data-pass="100" data-link="letters/1-month.html"><span>Kỉ niệm 1</span></div>
+      <div class="event" data-pass="200" data-link="letters/2-months.html"><span>Kỉ niệm 2</span></div>
+      <div class="event" data-pass="300" data-link="letters/3-months.html"><span>Kỉ niệm 3</span></div>
+      <div class="event" data-pass="future"><span>Kỉ niệm 4</span></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal">
+  <div class="envelope">
+    <div class="lock">🔒</div>
+    <input type="password" placeholder="Mật khẩu" id="pwd" />
+    <br />
+    <button onclick="unlock()">Mở</button>
+    <p id="msg"></p>
+  </div>
+</div>
+
+<script>
+  const heart = document.getElementById('heart');
+  const intro = document.getElementById('intro');
+  const curtain = document.getElementById('curtain');
+  const main = document.getElementById('main');
+  const bgm = document.getElementById('bgm');
+
+  heart.onclick = () => {
+    heart.classList.add('fly-away');
+    bgm.play();
+
+    setTimeout(() => {
+      intro.style.display = 'none';
+      curtain.classList.add('open');
+      main.classList.add('show');
+    }, 1500);
+  };
+
+  let currentEvent = null;
+
+  document.querySelectorAll('.event').forEach(e => {
+    e.onclick = () => {
+      currentEvent = e;
+      document.getElementById('modal').style.display = 'flex';
+      document.getElementById('msg').textContent = '';
+      document.getElementById('pwd').value = '';
+    };
+  });
+
+  function unlock() {
+    const pwd = document.getElementById('pwd').value;
+    const pass = currentEvent.dataset.pass;
+
+    if (pass === 'future') {
+      document.getElementById('msg').textContent = 'Chưa tới mòo đợi đi :>>';
+      return;
+    }
+
+    if (pwd === pass) {
+      currentEvent.querySelector('span').textContent = currentEvent.dataset.link.includes('1-month') ? '1 tháng' : 'Kỉ niệm';
+      setTimeout(() => {
+        window.location.href = currentEvent.dataset.link;
+      }, 1200);
+    } else {
+      document.getElementById('msg').textContent = 'Sai mật khẩu rồi :<';
+    }
+  }
+</script>
+
+</body>
+</html>
